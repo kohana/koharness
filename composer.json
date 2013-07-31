@@ -1,0 +1,29 @@
+{
+    "name":        "ingenerator/koharness",
+    "description": "Create test harnesses for Kohana modules by building a clean application container",
+    "homepage":    "https://github.com/ingenerator/koharness",
+    "licence":     "BSD-3-Clause",
+    "bin":         ["koharness"],
+    "keywords":    ["kohana", "tests"],
+    "authors": [
+        {
+            "name":     "Andrew Coulton",
+            "homepage": "https://github.com/acoulton",
+            "role":     "developer"
+        }
+    ],
+    "support": {
+        "issues":   "https://github.com/ingenerator/koharness/issues",
+        "source":   "https://github.com/ingenerator/koharness"
+    },
+    "require": {
+        "composer/installers": "~1.0",
+        "kohana/core":         "*",
+        "kohana/unittest":     "dev-ingenerator-master",
+        "php":                 ">=5.3.3"
+    },
+    "repositories": [
+        {"type": "vcs", "url": "https://github.com/ingenerator/kohana-core"},
+        {"type": "vcs", "url": "https://github.com/ingenerator/kohana-unittest"}
+    ]
+}

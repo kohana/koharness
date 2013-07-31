@@ -83,6 +83,7 @@ if (file_exists($cwd.'/vendor'))
 {
 	ensure_symlink($cwd.'/vendor', $basedir.'/vendor');
 }
+print "[INFO] Linked vendor path to temp_dir".\PHP_EOL;
 
 // Quit on success
 exit;
@@ -97,10 +98,9 @@ exit;
  */
 function ensure_symlink($target, $link)
 {
-print "$target => $link".PHP_EOL;
-  if ( ! symlink($target, $link))
-  {
-  	print "failed".PHP_EOL;
-    throw new \Exception("Could not create symlink from $link to $target");
-  }
+	if ( ! symlink($target, $link))
+	{
+		print "failed".PHP_EOL;
+	throw new \Exception("Could not create symlink from $link to $target");
+	}
 }

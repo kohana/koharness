@@ -1,0 +1,106 @@
+#!/usr/bin/php
+<?php
+/**
+ * Simple bootstrapper to create a generic Kohana test installation for testing a Kohana module. Prepares a standard
+ * directory structure, linking any module dependencies and the Kohana core to the generic MODPATH and SYSPATH locations,
+ * then deploys an APPPATH.bootstrap.php based on the vanilla Kohana bootstrap.
+ *
+ * Any dependencies (eg Kohana modules) must already be available locally - either as submodules or (preferred) as
+ * composer dependencies.
+ *
+ * The active module list is configured from a koharness.php file in the module root path.
+ *
+ * @author    Andrew Coulton <andrew@ingenerator.com>
+ * @copyright 2013 inGenerator Ltd
+ * @licence   http://kohanaframework.org/license
+ */
+
+// Ensure errors are visible
+ini_set('display_errors', 'On');
+
+// Read in the configuration from the current working directory
+$cwd = getcwd();
+if ( ! file_exists($cwd.'/koharness.php'))
+{
+    throw new \Exception("Could not locate a koharness.php file in $cwd");
+}
+$config = require_once($cwd.'/koharness.php');
+
+// Locate and if necessary wipe the temporary path
+$basedir = isset($config['temp_dir']) ? $config['temp_dir'] : '/tmp/koharness';
+if (file_exists($basedir))
+{
+  // Remove the temporary directory if it exists
+  print "[WARN] Deleting existing temp_dir at $basedir".\PHP_EOL;
+  `rm -rf $basedir`;
+}
+
+// Create the basic directory structure
+print "[INFO] Creating temporary application structure in $basedir".\PHP_EOL;
+mkdir($basedir, 0777, TRUE);
+mkdir($basedir.'/application');
+mkdir($basedir.'/application/cache');
+mkdir($basedir.'/application/logs');
+mkdir($basedir.'/modules');
+
+// Link the system module
+$syspath = isset($config['syspath']) ? $config['syspath'] : $cwd.'/vendor/kohana/core';
+if ( ! file_exists($syspath))
+{
+  throw new \Exception("Could not locate Kohana core in $syspath - have you checked it out?");
+}
+ensure_symlink($syspath, $basedir.'/system');
+echo "[INFO] Linked Kohana core from $syspath to {basedir}/system".\PHP_EOL;
+
+// Link any required modules
+if ( ! isset($config['modules']))
+{
+	$config['modules'] = array();
+}
+$module_def = array();
+foreach ($config['modules'] as $module => $path)
+{
+	$module_def[$module] = $basedir."/modules/$module";
+	ensure_symlink($path, $module_def[$module]);
+	echo "[INFO] Linked module $module from $path".\PHP_EOL;
+}
+
+// Generate the Kohana::modules() call and replace the call in the stock bootstrap
+$bootstrap_template = $cwd.'/vendor/ingenerator/koharness/templates/3.3/dev/bootstrap.php';
+if ( ! file_exists($bootstrap_template))
+{
+	throw new \Exception("Could not load the generic application bootstrap from $bootstrap_template");
+}
+
+$module_loader = "Kohana::modules(".var_export($module_def, TRUE).");".\PHP_EOL;
+$bootstrap = file_get_contents($bootstrap_template);
+$bootstrap = preg_replace('/Kohana::modules[^;]+;/', $module_loader, $bootstrap);
+file_put_contents($basedir.'/application/bootstrap.php', $bootstrap);
+print "[INFO] Created application bootstrap with configured module paths".\PHP_EOL;
+
+// Link the module vendor path to the container vendor
+if (file_exists($cwd.'/vendor'))
+{
+	ensure_symlink($cwd.'/vendor', $basedir.'/vendor');
+}
+
+// Quit on success
+exit;
+
+/**
+ * Attempt to create a symlink and throw an Exception on failure
+ *
+ * @param string $target The link target
+ * @param string $link   The link destination
+ *
+ * @throws Exception if a symlink cannot be created
+ */
+function ensure_symlink($target, $link)
+{
+print "$target => $link".PHP_EOL;
+  if ( ! symlink($target, $link))
+  {
+  	print "failed".PHP_EOL;
+    throw new \Exception("Could not create symlink from $link to $target");
+  }
+}

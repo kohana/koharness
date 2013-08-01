@@ -1,4 +1,4 @@
-#!/usr/bin/php
+#!/usr/bin/env php
 <?php
 /**
  * Simple bootstrapper to create a generic Kohana test installation for testing a Kohana module. Prepares a standard

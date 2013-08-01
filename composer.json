@@ -2,7 +2,7 @@
     "name":        "ingenerator/koharness",
     "description": "Create test harnesses for Kohana modules by building a clean application container",
     "homepage":    "https://github.com/ingenerator/koharness",
-    "licence":     "BSD-3-Clause",
+    "license":     "BSD-3-Clause",
     "bin":         ["koharness"],
     "keywords":    ["kohana", "tests"],
     "authors": [

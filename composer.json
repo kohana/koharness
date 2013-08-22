@@ -22,6 +22,6 @@
         "php":                 ">=5.3.3"
     },
     "repositories": [
-        {"type": "vcs", "url": "https://github.com/ingenerator/kohana-core"},
+        {"type": "vcs", "url": "https://github.com/ingenerator/kohana-core"}
     ]
 }

@@ -19,11 +19,9 @@
     "require": {
         "composer/installers": "~1.0",
         "kohana/core":         "*",
-        "kohana/unittest":     "dev-ingenerator-master",
         "php":                 ">=5.3.3"
     },
     "repositories": [
         {"type": "vcs", "url": "https://github.com/ingenerator/kohana-core"},
-        {"type": "vcs", "url": "https://github.com/ingenerator/kohana-unittest"}
     ]
 }

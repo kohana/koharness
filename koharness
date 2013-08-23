@@ -78,6 +78,21 @@ $bootstrap = preg_replace('/Kohana::modules[^;]+;/', $module_loader, $bootstrap)
 file_put_contents($basedir.'/application/bootstrap.php', $bootstrap);
 print "[INFO] Created application bootstrap with configured module paths".\PHP_EOL;
 
+// Generate the koharness bootstrap file (equivalent to index.php) in the local module dir
+// Use this bootstrap to pull up your Kohana install for test environment
+$apppath = $basedir.'/application/';
+$modpath = $basedir.'/modules/';
+$syspath = $syspath.'/';
+$docroot = $basedir.'/';
+$bootstrap_template = $cwd.'/vendor/ingenerator/koharness/templates/3.3/dev/koharness_bootstrap.php';
+if ( ! file_exists($bootstrap_template))
+{
+	throw new \Exception("Could not load the koharness bootstrap template from $bootstrap_template");
+}
+$template_content = require($bootstrap_template);
+file_put_contents($cwd.'/koharness_bootstrap.php', $template_content);
+print "[INFO] Created koharness bootstrap in $cwd".PHP_EOL;
+
 // Link the module vendor path to the container vendor
 if (file_exists($cwd.'/vendor'))
 {
@@ -101,6 +116,6 @@ function ensure_symlink($target, $link)
 	if ( ! symlink($target, $link))
 	{
 		print "failed".PHP_EOL;
-	throw new \Exception("Could not create symlink from $link to $target");
+		throw new \Exception("Could not create symlink from $link to $target");
 	}
 }

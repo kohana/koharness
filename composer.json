@@ -21,8 +21,5 @@
         "kohana/core":         "3.3.*",
         "php":                 ">=5.3.3"
     },
-    "minimum-stability": "dev",
-    "repositories": [
-        {"type": "vcs", "url": "https://github.com/kohana/core"}
-    ]
+    "minimum-stability": "dev"
 }

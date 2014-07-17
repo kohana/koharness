@@ -11,7 +11,7 @@
  * The active module list is configured from a koharness.php file in the module root path.
  *
  * @author    Andrew Coulton <andrew@ingenerator.com>
- * @copyright 2013 inGenerator Ltd
+ * @copyright 2014 Kohana Team
  * @licence   http://kohanaframework.org/license
  */
 

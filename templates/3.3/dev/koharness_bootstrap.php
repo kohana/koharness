@@ -4,8 +4,8 @@
  * koharnessed paths.
  *
  * @author    Andrew Coulton <andrew@ingenerator.com>
- * @copyright 2013 inGenerator Ltd
- * @licence   BSD
+ * @copyright 2014 Kohana Team
+ * @license    http://kohanaframework.org/license
  */
 $template = <<<TEMPLATE
 <?php

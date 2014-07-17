@@ -1,11 +1,17 @@
 {
-    "name":        "ingenerator/koharness",
-    "description": "Create test harnesses for Kohana modules by building a clean application container",
-    "homepage":    "https://github.com/ingenerator/koharness",
+    "name":        "kohana/koharness",
+    "description": "Creates test harnesses for kohana modules by bootstrapping a temporary kohana application with dependencies",
+    "homepage":    "http://kohanaframework.org",
     "license":     "BSD-3-Clause",
     "bin":         ["koharness"],
     "keywords":    ["kohana", "tests"],
     "authors": [
+        {
+            "name":     "Kohana Team",
+            "email":    "team@kohanaframework.org",
+            "homepage": "http://kohanaframework.org/team",
+            "role":     "maintainer"
+        },
         {
             "name":     "Andrew Coulton",
             "homepage": "https://github.com/acoulton",
@@ -13,8 +19,9 @@
         }
     ],
     "support": {
-        "issues":   "https://github.com/ingenerator/koharness/issues",
-        "source":   "https://github.com/ingenerator/koharness"
+        "issues":   "http://dev.kohanaframework.org",
+        "irc":      "irc://irc.freenode.net/kohana",
+        "source":   "https://github.com/kohana/koharness"
     },
     "require": {
         "composer/installers": "~1.0",

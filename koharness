@@ -66,7 +66,7 @@ foreach ($config['modules'] as $module => $path)
 }
 
 // Generate the Kohana::modules() call and replace the call in the stock bootstrap
-$bootstrap_template = $cwd.'/vendor/ingenerator/koharness/templates/3.3/dev/bootstrap.php';
+$bootstrap_template = $cwd.'/vendor/kohana/koharness/templates/3.3/dev/bootstrap.php';
 if ( ! file_exists($bootstrap_template))
 {
 	throw new \Exception("Could not load the generic application bootstrap from $bootstrap_template");
@@ -84,7 +84,7 @@ $apppath = $basedir.'/application/';
 $modpath = $basedir.'/modules/';
 $syspath = $syspath.'/';
 $docroot = $basedir.'/';
-$bootstrap_template = $cwd.'/vendor/ingenerator/koharness/templates/3.3/dev/koharness_bootstrap.php';
+$bootstrap_template = $cwd.'/vendor/kohana/koharness/templates/3.3/dev/koharness_bootstrap.php';
 if ( ! file_exists($bootstrap_template))
 {
 	throw new \Exception("Could not load the koharness bootstrap template from $bootstrap_template");

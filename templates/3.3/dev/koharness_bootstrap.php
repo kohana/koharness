@@ -17,7 +17,7 @@ define('APPPATH', '$apppath');
 define('MOPDATH', '$modpath');
 define('SYSPATH', '$syspath');
 define('DOCROOT', '$docroot');
-define('KOHARNESS_SRC', '$cwd/vendor/ingenerator/koharness/');
+define('KOHARNESS_SRC', '$cwd/vendor/kohana/koharness/');
 define('EXT', '.php');
 error_reporting(E_ALL | E_STRICT);
 define('KOHANA_START_TIME', microtime(TRUE));

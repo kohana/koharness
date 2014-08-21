@@ -14,7 +14,7 @@ $template = <<<TEMPLATE
 
 // Define the Kohana environment
 define('APPPATH', '$apppath');
-define('MOPDATH', '$modpath');
+define('MODPATH', '$modpath');
 define('SYSPATH', '$syspath');
 define('DOCROOT', '$docroot');
 define('KOHARNESS_SRC', '$cwd/vendor/kohana/koharness/');

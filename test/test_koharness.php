@@ -57,7 +57,7 @@ function run_koharness($basedir)
 	$cmd = 'cd '.escapeshellarg($basedir).' && '.escapeshellcmd($koharness_path);
 	echoline("Executing koharness with command $cmd");
 	passthru($cmd, $return);
-	assert_true($return === 0, "Koharness execution returned 0");
+	assert_true($return === 0, "Koharness execution should return 0");
 }
 
 function verify($basedir)

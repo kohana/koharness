@@ -21,10 +21,6 @@ error_reporting(E_ALL | E_STRICT);
 
 // Read in the configuration from the current working directory
 $cwd = getcwd();
-if ( ! file_exists($cwd.'/koharness.php'))
-{
-    throw new \Exception("Could not locate a koharness.php file in $cwd");
-}
 $project_config = require_once($cwd.'/koharness.php');
 $config = array_merge(
 	array(
@@ -54,10 +50,7 @@ mkdir($basedir.'/modules');
 
 // Link the system module
 $syspath = $config['syspath'];
-if ( ! file_exists($syspath))
-{
-  throw new \Exception("Could not locate Kohana core in $syspath - have you checked it out?");
-}
+assert_path_exists($syspath, 'your project needs to provide kohana/core as a dependency');
 ensure_symlink($syspath, $basedir.'/system');
 echo "[INFO] Linked Kohana core from $syspath to {basedir}/system".\PHP_EOL;
 
@@ -71,10 +64,7 @@ foreach ($config['modules'] as $module => $path)
 
 // Generate the Kohana::modules() call and replace the call in the stock bootstrap
 $bootstrap_template = $cwd.'/vendor/kohana/koharness/templates/3.3/dev/bootstrap.php';
-if ( ! file_exists($bootstrap_template))
-{
-	throw new \Exception("Could not load the generic application bootstrap from $bootstrap_template");
-}
+assert_path_exists($bootstrap_template, 'Could not find the generic application bootstrap template');
 
 $module_loader = "Kohana::modules(".var_export($module_def, TRUE).");".\PHP_EOL;
 $bootstrap = file_get_contents($bootstrap_template);
@@ -89,10 +79,7 @@ $modpath = $basedir.'/modules/';
 $syspath = $syspath.'/';
 $docroot = $basedir.'/';
 $bootstrap_template = $cwd.'/vendor/kohana/koharness/templates/3.3/dev/koharness_bootstrap.php';
-if ( ! file_exists($bootstrap_template))
-{
-	throw new \Exception("Could not load the koharness bootstrap template from $bootstrap_template");
-}
+assert_path_exists($bootstrap_template, 'Could not load the koharness bootstrap template');
 $template_content = require($bootstrap_template);
 file_put_contents($cwd.'/koharness_bootstrap.php', $template_content);
 print "[INFO] Created koharness bootstrap in $cwd".PHP_EOL;
@@ -121,5 +108,13 @@ function ensure_symlink($target, $link)
 	{
 		print "failed".PHP_EOL;
 		throw new \Exception("Could not create symlink from $link to $target");
+	}
+}
+
+function assert_path_exists($path, $message)
+{
+	if ( ! file_exists($path))
+	{
+		throw new \Exception("Expected $path to exist but it does not - ".$message);
 	}
 }

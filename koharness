@@ -17,6 +17,7 @@
 
 // Ensure errors are visible
 ini_set('display_errors', 'On');
+error_reporting(E_ALL | E_STRICT);
 
 // Read in the configuration from the current working directory
 $cwd = getcwd();
@@ -24,10 +25,18 @@ if ( ! file_exists($cwd.'/koharness.php'))
 {
     throw new \Exception("Could not locate a koharness.php file in $cwd");
 }
-$config = require_once($cwd.'/koharness.php');
+$project_config = require_once($cwd.'/koharness.php');
+$config = array_merge(
+	array(
+		'temp_dir' => '/tmp/koharness',
+		'syspath'  => $cwd.'/vendor/kohana/core',
+		'modules'  => array(),
+	),
+	$project_config
+);
 
 // Locate and if necessary wipe the temporary path
-$basedir = isset($config['temp_dir']) ? $config['temp_dir'] : '/tmp/koharness';
+$basedir = $config['temp_dir'];
 if (file_exists($basedir))
 {
   // Remove the temporary directory if it exists
@@ -44,7 +53,7 @@ mkdir($basedir.'/application/logs');
 mkdir($basedir.'/modules');
 
 // Link the system module
-$syspath = isset($config['syspath']) ? $config['syspath'] : $cwd.'/vendor/kohana/core';
+$syspath = $config['syspath'];
 if ( ! file_exists($syspath))
 {
   throw new \Exception("Could not locate Kohana core in $syspath - have you checked it out?");
@@ -52,11 +61,6 @@ if ( ! file_exists($syspath))
 ensure_symlink($syspath, $basedir.'/system');
 echo "[INFO] Linked Kohana core from $syspath to {basedir}/system".\PHP_EOL;
 
-// Link any required modules
-if ( ! isset($config['modules']))
-{
-	$config['modules'] = array();
-}
 $module_def = array();
 foreach ($config['modules'] as $module => $path)
 {

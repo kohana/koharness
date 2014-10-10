@@ -50,13 +50,16 @@ assert_path_exists($syspath, 'your project needs to provide kohana/core as a dep
 ensure_symlink($syspath, $basedir.'/system');
 echo "[INFO] Linked Kohana core from $syspath to {basedir}/system".\PHP_EOL;
 
-$module_def = array();
+$module_def = array(
+	'application' => $basedir.'/application'
+);
 foreach ($config['modules'] as $module => $path)
 {
 	$module_def[$module] = $basedir."/modules/$module";
 	ensure_symlink($path, $module_def[$module]);
 	echo "[INFO] Linked module $module from $path".\PHP_EOL;
 }
+$module_def['core'] = $syspath;
 
 // Generate the Kohana::modules() call and replace the call in the stock bootstrap
 $app_bootstrap = $basedir.'/application/bootstrap.php';

@@ -24,9 +24,11 @@ $cwd = getcwd();
 $project_config = require_once($cwd.'/koharness.php');
 $config = array_merge(
 	array(
-		'temp_dir' => '/tmp/koharness',
-		'syspath'  => $cwd.'/vendor/kohana/core',
-		'modules'  => array(),
+		'kohana_version'   => '3.3',
+		'kohana_stability' => 'develop',
+		'temp_dir'         => '/tmp/koharness',
+		'syspath'          => $cwd.'/vendor/kohana/core',
+		'modules'          => array(),
 	),
 	$project_config
 );
@@ -40,13 +42,7 @@ if (file_exists($basedir))
   `rm -rf $basedir`;
 }
 
-// Create the basic directory structure
-print "[INFO] Creating temporary application structure in $basedir".\PHP_EOL;
-mkdir($basedir, 0777, TRUE);
-mkdir($basedir.'/application');
-mkdir($basedir.'/application/cache');
-mkdir($basedir.'/application/logs');
-mkdir($basedir.'/modules');
+download_and_unpack_kohana_sample($basedir, $config['kohana_version'], $config['kohana_stability']);
 
 // Link the system module
 $syspath = $config['syspath'];
@@ -63,11 +59,10 @@ foreach ($config['modules'] as $module => $path)
 }
 
 // Generate the Kohana::modules() call and replace the call in the stock bootstrap
-$bootstrap_template = $cwd.'/vendor/kohana/koharness/templates/3.3/dev/bootstrap.php';
-assert_path_exists($bootstrap_template, 'Could not find the generic application bootstrap template');
-
+$app_bootstrap = $basedir.'/application/bootstrap.php';
+assert_path_exists($app_bootstrap, "Could not find the application/bootstrap.php");
 $module_loader = "Kohana::modules(".var_export($module_def, TRUE).");".\PHP_EOL;
-$bootstrap = file_get_contents($bootstrap_template);
+$bootstrap = file_get_contents($app_bootstrap);
 $bootstrap = preg_replace('/Kohana::modules[^;]+;/', $module_loader, $bootstrap);
 file_put_contents($basedir.'/application/bootstrap.php', $bootstrap);
 print "[INFO] Created application bootstrap with configured module paths".\PHP_EOL;
@@ -106,7 +101,6 @@ function ensure_symlink($target, $link)
 {
 	if ( ! symlink($target, $link))
 	{
-		print "failed".PHP_EOL;
 		throw new \Exception("Could not create symlink from $link to $target");
 	}
 }
@@ -116,5 +110,31 @@ function assert_path_exists($path, $message)
 	if ( ! file_exists($path))
 	{
 		throw new \Exception("Expected $path to exist but it does not - ".$message);
+	}
+}
+
+function download_and_unpack_kohana_sample($basedir, $version, $stability)
+{
+	print "[INFO] Creating temporary application structure in $basedir".\PHP_EOL;
+	mkdir($basedir, 0777, TRUE);
+
+	$archive_url = "https://github.com/kohana/kohana/archive/$version/$stability.tar.gz";
+	$archive_path = sys_get_temp_dir().'/kohana-'.$version.'-'.$stability.'.tar.gz';
+	exec_or_fail('wget '.$archive_url.' -O '.escapeshellarg($archive_path));
+
+	// Github archives have a top level directory with the branch reference - strip-components skips over that.
+	exec_or_fail('tar -x --strip-components=1 -f '.escapeshellarg($archive_path).' -C '.escapeshellarg($basedir));
+
+	// Remove the (empty) git submodule directories from the download if they exist
+	exec_or_fail('rm -rf '.escapeshellarg($basedir).'/system');
+	exec_or_fail('rm -rf '.escapeshellarg($basedir).'/modules/*');
+}
+
+function exec_or_fail($cmd)
+{
+	passthru($cmd, $return);
+	if ($return !== 0)
+	{
+		throw new \Exception("Command $cmd failed with return code $return");
 	}
 }

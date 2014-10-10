@@ -1,5 +1,6 @@
 koharness - bootstrap a clean Kohana app for testing your modules
 ===================================================================
+[![Build Status](https://travis-ci.org/kohana/koharness.svg?branch=master)](https://travis-ci.org/kohana/koharness)
 
 koharness is a very simple package (read, hack) that provides a clean testing environment for
 your Kohana modules. It can generate a basic Kohana application containing your module and 

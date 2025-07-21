@@ -19,7 +19,13 @@ define('SYSPATH', '$syspath');
 define('DOCROOT', '$docroot');
 define('KOHARNESS_SRC', '$cwd/vendor/kohana/koharness/');
 define('EXT', '.php');
-error_reporting(E_ALL | E_STRICT);
+if (PHP_VERSION_ID < 50400) {
+  // Legacy behaviour (assumed unused) for consumers on 5.3.x
+  error_reporting(E_ALL | E_STRICT);
+} else {
+  // For all versions >= 5.4.0, E_ALL is functionally identical to E_ALL | E_STRICT.
+  error_reporting(E_ALL)
+}
 define('KOHANA_START_TIME', microtime(TRUE));
 define('KOHANA_START_MEMORY', memory_get_usage());
 
